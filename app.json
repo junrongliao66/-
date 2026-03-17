@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/form/form",
+    "pages/admin/admin"
+  ],
+  "window": {
+    "navigationBarTitleText": "报餐小程序",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f3f4f6"
+  }
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>报餐申请表</title>
+  <style>
+    :root {
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: #1f2937;
+      background: #f3f4f6;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(680px, 100%);
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      padding: 28px;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .admin-link {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: #6b7280;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2563eb;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      background: #2563eb;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .msg {
+      margin: 8px 0 0;
+      font-size: 0.9rem;
+      color: #059669;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <section class="card">
+    <div class="head">
+      <h1>报餐申请表</h1>
+      <a class="admin-link" href="./admin.html">进入后台统计</a>
+    </div>
+    <p>请准确填写姓名、日期、报餐时间段及报餐类型。</p>
+
+    <form id="meal-form">
+      <div class="field">
+        <label for="name">姓名</label>
+        <input id="name" name="name" type="text" placeholder="请输入姓名" required />
+      </div>
+
+      <div class="field">
+        <label for="date">日期</label>
+        <input id="date" name="date" type="date" required />
+      </div>
+
+      <div class="field">
+        <label for="time-slot">报餐时间段</label>
+        <select id="time-slot" name="timeSlot" required>
+          <option value="" selected disabled>请选择时间段</option>
+          <option value="早餐">早餐</option>
+          <option value="午餐">午餐</option>
+          <option value="晚餐">晚餐</option>
+          <option value="夜宵">夜宵</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="meal-type">报餐类型</label>
+        <select id="meal-type" name="mealType" required>
+          <option value="" selected disabled>请选择报餐类型</option>
+          <option value="普通餐">普通餐</option>
+          <option value="素食餐">素食餐</option>
+          <option value="清真餐">清真餐</option>
+          <option value="其他">其他（请在备注说明）</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="remark">备注</label>
+        <textarea id="remark" name="remark" rows="3" placeholder="可填写特殊需求"></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit">提交报餐</button>
+      </div>
+      <p id="msg" class="msg"></p>
+    </form>
+  </section>
+
+  <script>
+    const STORAGE_KEY = 'mealRecords';
+    const dateInput = document.getElementById('date');
+    const form = document.getElementById('meal-form');
+    const msg = document.getElementById('msg');
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    dateInput.value = `${year}-${month}-${day}`;
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const record = {
+        id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        name: formData.get('name').toString().trim(),
+        date: formData.get('date').toString(),
+        timeSlot: formData.get('timeSlot').toString(),
+        mealType: formData.get('mealType').toString(),
+        remark: formData.get('remark').toString().trim(),
+        createdAt: new Date().toISOString()
+      };
+
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      existing.push(record);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+
+      msg.textContent = '提交成功，已保存报餐记录。';
+      form.reset();
+      dateInput.value = `${year}-${month}-${day}`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>报餐后台统计</title>
+  <style>
+    :root {
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: #1f2937;
+      background: #f3f4f6;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f3f4f6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      padding: 20px;
+    }
+
+    h1,
+    h2 {
+      margin: 0 0 12px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    input,
+    button {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      background: #2563eb;
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      color: #374151;
+    }
+
+    .empty {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <div class="top-bar">
+        <h1>报餐后台统计</h1>
+        <a class="link" href="./index.html">返回报餐填写页</a>
+      </div>
+      <p>支持查询每日报餐人员明细，并统计每月人员报餐次数。</p>
+    </section>
+
+    <section class="card">
+      <h2>每日报餐人员明细</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="daily-date">查询日期</label>
+          <input id="daily-date" type="date" />
+        </div>
+        <button id="daily-query-btn" type="button">查询</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>日期</th>
+            <th>时间段</th>
+            <th>报餐类型</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody id="daily-tbody"></tbody>
+      </table>
+      <p id="daily-empty" class="empty"></p>
+    </section>
+
+    <section class="card">
+      <h2>每月人员报餐次数</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="month-picker">查询月份</label>
+          <input id="month-picker" type="month" />
+        </div>
+        <button id="month-query-btn" type="button">统计</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>报餐次数</th>
+          </tr>
+        </thead>
+        <tbody id="month-tbody"></tbody>
+      </table>
+      <p id="month-empty" class="empty"></p>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'mealRecords';
+    const dailyDateInput = document.getElementById('daily-date');
+    const monthInput = document.getElementById('month-picker');
+
+    const dailyTbody = document.getElementById('daily-tbody');
+    const monthTbody = document.getElementById('month-tbody');
+    const dailyEmpty = document.getElementById('daily-empty');
+    const monthEmpty = document.getElementById('month-empty');
+
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    dailyDateInput.value = `${yyyy}-${mm}-${dd}`;
+    monthInput.value = `${yyyy}-${mm}`;
+
+    function getRecords() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
+
+    function renderDaily() {
+      const target = dailyDateInput.value;
+      const records = getRecords().filter((item) => item.date === target);
+
+      dailyTbody.innerHTML = '';
+      if (!records.length) {
+        dailyEmpty.textContent = '该日期暂无报餐记录。';
+        return;
+      }
+
+      dailyEmpty.textContent = '';
+      records
+        .sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN'))
+        .forEach((item) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.date}</td>
+            <td>${item.timeSlot}</td>
+            <td>${item.mealType}</td>
+            <td>${item.remark || '-'}</td>
+          `;
+          dailyTbody.appendChild(row);
+        });
+    }
+
+    function renderMonthly() {
+      const targetMonth = monthInput.value;
+      const records = getRecords().filter((item) => item.date.slice(0, 7) === targetMonth);
+
+      monthTbody.innerHTML = '';
+      if (!records.length) {
+        monthEmpty.textContent = '该月份暂无报餐记录。';
+        return;
+      }
+
+      monthEmpty.textContent = '';
+      const countMap = records.reduce((map, item) => {
+        map[item.name] = (map[item.name] || 0) + 1;
+        return map;
+      }, {});
+
+      Object.entries(countMap)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-Hans-CN'))
+        .forEach(([name, count]) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${name}</td><td>${count}</td>`;
+          monthTbody.appendChild(row);
+        });
+    }
+
+    document.getElementById('daily-query-btn').addEventListener('click', renderDaily);
+    document.getElementById('month-query-btn').addEventListener('click', renderMonthly);
+
+    renderDaily();
+    renderMonthly();
+  </script>
+</body>
+</html>
