@@ -81,5 +81,9 @@ Page({
 
   goAdmin() {
     wx.navigateTo({ url: '/pages/admin/admin' });
+  },
+
+  goSettings() {
+    wx.navigateTo({ url: '/pages/settings/settings' });
   }
 });

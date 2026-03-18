@@ -34,5 +34,6 @@
   </view>
 
   <button class="btn-primary" bindtap="submitForm">提交报餐</button>
-  <button bindtap="goAdmin">进入后台统计</button>
+  <button class="btn-secondary" bindtap="goAdmin">进入后台统计</button>
+  <button class="btn-secondary" bindtap="goSettings">管理员设置</button>
 </view>

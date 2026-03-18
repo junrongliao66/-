@@ -1,27 +1,30 @@
 page {
-  background: #f3f4f6;
-  color: #1f2937;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: #0f172a;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
 }
 
 .card {
   margin: 24rpx;
   padding: 28rpx;
-  border-radius: 20rpx;
-  background: #fff;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12rpx 32rpx rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(4rpx);
 }
 
 .title {
   font-size: 36rpx;
   font-weight: 700;
-  margin-bottom: 12rpx;
+  margin-bottom: 10rpx;
 }
 
 .desc {
-  color: #6b7280;
+  color: #64748b;
   font-size: 26rpx;
-  margin-bottom: 24rpx;
+  margin-bottom: 22rpx;
+  line-height: 1.5;
 }
 
 .field {
@@ -32,54 +35,74 @@ page {
   display: block;
   font-size: 28rpx;
   font-weight: 600;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
+  color: #1e293b;
 }
 
 .input,
 .picker,
 .textarea {
   width: 100%;
-  min-height: 72rpx;
+  min-height: 76rpx;
   box-sizing: border-box;
-  border: 1rpx solid #d1d5db;
-  border-radius: 12rpx;
+  border: 1rpx solid #cbd5e1;
+  border-radius: 14rpx;
   padding: 14rpx 16rpx;
   font-size: 28rpx;
   background: #fff;
+  color: #0f172a;
 }
 
 .picker {
   display: flex;
   align-items: center;
-  color: #111827;
 }
 
 .placeholder {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .btn-primary {
-  margin-top: 12rpx;
-  background: #2563eb;
+  margin-top: 10rpx;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   color: #fff;
-  border-radius: 12rpx;
+  border-radius: 14rpx;
   font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-secondary {
+  margin-top: 12rpx;
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1rpx solid #cbd5e1;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+}
+
+.tip {
+  font-size: 24rpx;
+  color: #475569;
+  margin-bottom: 16rpx;
+  line-height: 1.5;
 }
 
 .empty {
   font-size: 26rpx;
-  color: #6b7280;
+  color: #64748b;
   margin-top: 12rpx;
 }
 
 .table {
   width: 100%;
-  border-top: 1rpx solid #e5e7eb;
+  border-top: 1rpx solid #e2e8f0;
+  margin-top: 10rpx;
 }
 
 .row {
   display: flex;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #e2e8f0;
 }
 
 .cell {
@@ -91,5 +114,5 @@ page {
 
 .head .cell {
   font-weight: 700;
-  background: #f9fafb;
+  background: #f8fafc;
 }

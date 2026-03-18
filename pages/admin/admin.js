@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'mealRecords';
+const SETTINGS_KEY = 'mealAdminSettings';
 
 function todayDate() {
   const now = new Date();
@@ -12,22 +13,43 @@ function thisMonth() {
   return todayDate().slice(0, 7);
 }
 
+function getSettings() {
+  const settings = wx.getStorageSync(SETTINGS_KEY) || {};
+  return {
+    currentUser: settings.currentUser || '',
+    adminUsers: Array.isArray(settings.adminUsers) ? settings.adminUsers : []
+  };
+}
+
 Page({
   data: {
     dailyDate: todayDate(),
     month: thisMonth(),
     dailyRecords: [],
-    monthlyStats: []
+    monthlyStats: [],
+    hasAccess: false,
+    currentUser: ''
   },
 
   onLoad() {
-    this.queryDaily();
-    this.queryMonth();
+    this.refreshPermission();
   },
 
   onShow() {
-    this.queryDaily();
-    this.queryMonth();
+    this.refreshPermission();
+  },
+
+  refreshPermission() {
+    const { currentUser, adminUsers } = getSettings();
+    const hasAccess = !!currentUser && adminUsers.includes(currentUser);
+
+    this.setData({ currentUser, hasAccess });
+    if (hasAccess) {
+      this.queryDaily();
+      this.queryMonth();
+    } else {
+      this.setData({ dailyRecords: [], monthlyStats: [] });
+    }
   },
 
   getRecords() {
@@ -43,6 +65,10 @@ Page({
   },
 
   queryDaily() {
+    if (!this.data.hasAccess) {
+      return;
+    }
+
     const { dailyDate } = this.data;
     const records = this.getRecords()
       .filter((item) => item.date === dailyDate)
@@ -51,6 +77,10 @@ Page({
   },
 
   queryMonth() {
+    if (!this.data.hasAccess) {
+      return;
+    }
+
     const { month } = this.data;
     const records = this.getRecords().filter((item) => item.date.slice(0, 7) === month);
 
@@ -64,5 +94,9 @@ Page({
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'zh-Hans-CN'));
 
     this.setData({ monthlyStats });
+  },
+
+  goSettings() {
+    wx.navigateTo({ url: '/pages/settings/settings' });
   }
 });

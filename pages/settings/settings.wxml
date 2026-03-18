@@ -1,0 +1,17 @@
+<view class="card">
+  <view class="title">管理员设置</view>
+  <view class="desc">仅管理员名单中的用户可查看后台明细与统计。</view>
+
+  <view class="field">
+    <text class="label">当前用户</text>
+    <input class="input" placeholder="请输入当前登录用户名" value="{{currentUser}}" bindinput="onCurrentUserInput" />
+  </view>
+
+  <view class="field">
+    <text class="label">管理员名单（每行一个用户名）</text>
+    <textarea class="textarea" placeholder="例如：\nzhangsan\nlisi" value="{{adminUsersText}}" bindinput="onAdminUsersInput" />
+  </view>
+
+  <button class="btn-primary" bindtap="saveSettings">保存设置</button>
+  <button class="btn-secondary" bindtap="backToForm">返回报餐页</button>
+</view>
