@@ -1,7 +1,7 @@
 {
   "pages": [
     "pages/form/form",
-    "pages/admin/admin"
+
   ],
   "window": {
     "navigationBarTitleText": "报餐小程序",
