@@ -13,8 +13,8 @@ Page({
     name: '',
     date: getToday(),
     remark: '',
-    timeSlotOptions: ['早餐', '午餐', '晚餐', '夜宵'],
-    mealTypeOptions: ['普通餐', '素食餐', '清真餐', '其他'],
+    timeSlotOptions: ['中午', '晚上'],
+    mealTypeOptions: ['炒菜', '炒饭', '炒粉'],
     timeSlotIndex: -1,
     mealTypeIndex: -1
   },
