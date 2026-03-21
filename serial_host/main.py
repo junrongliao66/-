@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import tkinter as tk
 
-from controller import DeviceController
-from ui_main import MainWindow
+from .controller import DeviceController
+from .ui_main import MainWindow
 
 
 def main() -> None:

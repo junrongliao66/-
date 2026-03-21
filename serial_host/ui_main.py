@@ -4,7 +4,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-from protocol_events import DeviceFrameEvent, DeviceLogEvent, DeviceStatusEvent
+from .protocol_events import DeviceFrameEvent, DeviceLogEvent, DeviceStatusEvent
 
 
 class MainWindow:

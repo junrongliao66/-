@@ -9,7 +9,7 @@ from typing import Callable, Optional
 import serial
 from serial import SerialException
 
-from protocol_events import DeviceLogEvent, DeviceStatusEvent
+from .protocol_events import DeviceLogEvent, DeviceStatusEvent
 
 StatusCallback = Callable[[DeviceStatusEvent], None]
 RawDataCallback = Callable[[bytes], None]
